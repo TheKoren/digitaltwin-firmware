@@ -1,6 +1,6 @@
 # Firmware
 
-![alt text](../docs/img/sensor_network.png "SensorNetwork")
+![alt text](docs/img/sensor_network.png "SensorNetwork")
 
 ## idf
 
