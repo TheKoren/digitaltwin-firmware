@@ -7,7 +7,7 @@
 #include <ESPmDNS.h>
 
 const char* wifi_network_ssid = "Koren";
-const char* wifi_network_password = "Asd12345";
+const char* wifi_network_password = "hotqm1asd";
 
 const char *soft_ap_ssid = "ESP32";
 const char *soft_ap_password = "123456789";
@@ -119,53 +119,57 @@ String requestData(String ip) {
 }
 
 String readFromAP () {
- // Creating JSON Data
-    StaticJsonDocument<256> doc;
-    char output[256];
+  StaticJsonDocument<512> doc;
+  char output[512];
 
-    //Id
-    String clientId = "ESP32Client-";
-    clientId += WiFi.macAddress();
-    doc["deviceId"] = clientId;
+  // Header
+  JsonObject header = doc.createNestedObject("header");
+  header["device"] = "ESP32";
+  header["mac"] = WiFi.macAddress();
 
-    //AmbientSensorValues
-    float temp = random(0, 40);
-    float humidity = random(30, 70);
-    float pressure = 40;
-    float gas = random(100, 500);
-    JsonObject sensorValues = doc.createNestedObject("sensorValues");
-    sensorValues["temp"] = temp;
-    sensorValues["hum"] = humidity;
-    sensorValues["press"] = pressure;
-    sensorValues["gas"] = gas;
-    
-    //WifiValues;
-    JsonObject wifiValues = doc.createNestedObject("wifiValues");
-    JsonArray addressList = wifiValues.createNestedArray("addressList");
-    wifiValues["rssi"] = WiFi.RSSI();
-    //wifiValues["snr"] = WiFi.RSSI()-WiFi.noise();
-    wifiValues["channel"] = WiFi.channel();
-    wifiValues["TxPower"] = WiFi.getTxPower();
-    //wifiValues["speed"] = WiFi.getSpeedMbps();
-    //wifiValues["packetloss"] = WiFi.packetLoss();
-    wifiValues["mode"] = "WIFI_AP_STA";
+  // Measurements
+  unsigned long startTime = millis();
+  updateMeasurementValues();
+  unsigned long endTime = millis();
+  JsonObject measurements = doc.createNestedObject("measurements");
+  measurements["temp"] = random(0, 40);
+  measurements["hum"] = random(30, 70);
+  measurements["press"] = random(38, 42);
+  measurements["gas"] = random(100, 500);
+  
+  // Operational
+  JsonObject operational = doc.createNestedObject("operational");
+  JsonArray addressList = operational.createNestedArray("addressList");
+  operational["rssi"] = WiFi.RSSI();
+  operational["channel"] = WiFi.channel();
+  operational["TxPower"] = WiFi.getTxPower();
+  operational["mode"] = "WIFI_AP_STA";
+  operational["sensorRead"] = endTime - startTime;
 
-    wifi_sta_list_t stationList;
-    memset(&stationList, 0, sizeof(stationList));
-    esp_wifi_ap_get_sta_list(&stationList);
-    
-    for (int i = 0; i < WiFi.softAPgetStationNum(); i++) {
-      addressList.add(getMacAddress(stationList.sta[i].mac));
-    }
-    serializeJson(doc, output);
-    Serial.println(output);
-    return output;
+  /*
+  Not used: 
+  //wifiValues["snr"] = WiFi.RSSI()-WiFi.noise();
+  //wifiValues["speed"] = WiFi.getSpeedMbps();
+  //wifiValues["packetloss"] = WiFi.packetLoss();
+  */
+
+  wifi_sta_list_t stationList;
+  memset(&stationList, 0, sizeof(stationList));
+  esp_wifi_ap_get_sta_list(&stationList);
+  
+  for (int i = 0; i < WiFi.softAPgetStationNum(); i++) {
+    addressList.add(getMacAddress(stationList.sta[i].mac));
+  }
+
+  serializeJson(doc, output);
+  Serial.println(output);
+  return output;
 }
 
 void sendData(String data) {
   WiFiClient client;
     HTTPClient http;
-    String url = "http://192.168.137.1:8080/data";
+    String url = "http://192.168.0.100:8080/data";
 
     http.begin(client, url);
     http.addHeader("Content-Type", "application/json");
@@ -193,4 +197,9 @@ void reconnect() {
     }
   Serial.print("\n[+] Reconnected to WiFi network with local IP : ");
   Serial.println(WiFi.localIP());
+}
+
+void updateMeasurementValues() {
+  Serial.println("Reading sensorvalues");
+  delay(10);
 }
