@@ -161,23 +161,8 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
     // -------------------------------
     case sl_bt_evt_system_boot_id:
       // Print boot message.
-      app_log_info("Bluetooth stack booted: v%d.%d.%d-b%d" APP_LOG_NL,
-                   evt->data.evt_system_boot.major,
-                   evt->data.evt_system_boot.minor,
-                   evt->data.evt_system_boot.patch,
-                   evt->data.evt_system_boot.build);
       sc = sl_bt_system_get_identity_address(&address, &address_type);
       app_assert_status(sc);
-      app_log_info("Bluetooth %s address: %02X:%02X:%02X:%02X:%02X:%02X" APP_LOG_NL,
-                   address_type ? "static random" : "public device",
-                   address.addr[5],
-                   address.addr[4],
-                   address.addr[3],
-                   address.addr[2],
-                   address.addr[1],
-                   address.addr[0]);
-      unique_id = 0xFFFFFF & *((uint32_t*) address.addr);
-      advertise_init(unique_id);
       break;
 
     // -------------------------------
