@@ -50,6 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-bt_soc_thunderboard_brd4166a/outgoing/
-bt_soc_thunderboard_brd4166a/.browser/
-bt_soc_thunderboard_brd4166a/.metadata/
+outgoing/
+.browser/
+.metadata/
