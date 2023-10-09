@@ -1,0 +1,16 @@
+/*
+ * measurement.h
+ *
+ *  Created on: 9 Oct 2023
+ *      Author: koren
+ */
+
+#ifndef MEASUREMENT_H
+#define MEASUREMENT_H
+
+void measurement_init(void);
+
+void measurement_process_action(void);
+
+
+#endif /* MEASUREMENT_H */
