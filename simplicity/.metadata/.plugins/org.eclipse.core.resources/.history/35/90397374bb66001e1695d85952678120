@@ -1,0 +1,15 @@
+/*
+ * measurement.c
+ *
+ *  Created on: 9 Oct 2023
+ *      Author: 36302
+ */
+
+
+#include "sl_sleeptimer.h"
+
+#define TOOGLE_DELAY_MS         500
+
+
+sl_sleeptimer_timer_handle_t timer;
+bool toggle_timeout = false;
