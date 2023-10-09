@@ -40,11 +40,11 @@ component:
 - {id: in_place_ota_dfu}
 - {id: gatt_service_battery}
 - {id: bluetooth_feature_sm}
-- {id: bluetooth_feature_legacy_advertiser}
 - {id: mpu}
+- {id: bluetooth_feature_legacy_advertiser}
 - {id: gatt_service_rht}
-- {id: gatt_service_pressure}
 - {id: gatt_configuration}
+- {id: gatt_service_pressure}
 - {id: gatt_service_sound}
 - {id: gatt_service_device_information}
 - instance: [led0, led1]

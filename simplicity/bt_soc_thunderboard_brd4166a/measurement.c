@@ -10,7 +10,7 @@
 #include "measurement.h"
 
 
-#define TOOGLE_DELAY_MS         500
+#define TOOGLE_DELAY_MS         5000
 
 
 sl_sleeptimer_timer_handle_t timer;
@@ -43,13 +43,14 @@ void measurement_process_action(void)
       uint16_t eco2;
       uint16_t tvoc;
       float sound_level;
-      char values[9][50];
+      char values[10][50];
       sl_service_rht_get(&humidity, &temperature);
       sl_service_light_get(&lux, &uvi);
       sl_service_pressure_get(&pressure);
       sl_service_gas_get(&eco2, &tvoc);
       sl_service_sound_get(&sound_level);
 
+      sprintf(values[0], "[");
       sprintf(values[1], "%lu,", humidity);
       sprintf(values[2], "%ld,", temperature);
       sprintf(values[3], "%lu,", (uint32_t)(lux * 100));
@@ -58,14 +59,15 @@ void measurement_process_action(void)
       sprintf(values[6], "%d,", eco2);
       sprintf(values[7], "%d,", tvoc);
       sprintf(values[8], "%d", (int16_t)(sound_level * 100.0f));
+      sprintf(values[9], "]\r\n");
 
-      for(int i = 1; i <= 8; i++)
+      for(int i = 1; i <= 9; i++)
         {
            strcat(values[0], values[i]);
         }
 
       const char * payload = values[0];
-      app_log_info(payload, APP_LOG_NL);
+      printf(payload, APP_LOG_NL);
     toggle_timeout = false;
   }
 }

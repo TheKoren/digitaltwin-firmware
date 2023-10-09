@@ -214,26 +214,26 @@
 #define USART0_RTS_LOC                           30
 #endif
 
-// USART0 RX on PA1
+// USART0 RX on PF4
 #ifndef USART0_RX_PORT                          
-#define USART0_RX_PORT                           gpioPortA
+#define USART0_RX_PORT                           gpioPortF
 #endif
 #ifndef USART0_RX_PIN                           
-#define USART0_RX_PIN                            1
+#define USART0_RX_PIN                            4
 #endif
 #ifndef USART0_RX_LOC                           
-#define USART0_RX_LOC                            0
+#define USART0_RX_LOC                            27
 #endif
 
-// USART0 TX on PA0
+// USART0 TX on PF3
 #ifndef USART0_TX_PORT                          
-#define USART0_TX_PORT                           gpioPortA
+#define USART0_TX_PORT                           gpioPortF
 #endif
 #ifndef USART0_TX_PIN                           
-#define USART0_TX_PIN                            0
+#define USART0_TX_PIN                            3
 #endif
 #ifndef USART0_TX_LOC                           
-#define USART0_TX_LOC                            0
+#define USART0_TX_LOC                            27
 #endif
 
 // [USART0]$

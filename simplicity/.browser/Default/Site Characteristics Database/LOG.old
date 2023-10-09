@@ -1,5 +1,1 @@
-2023/10/09-19:14:34.759 4680 Log #3: 11 ops saved to Table #4 OK
-2023/10/09-19:14:34.760 4680 Archiving D:\Workspaces\digitaltwin-firmware\simplicity\.browser\Default\Site Characteristics Database/000003.log: OK
-2023/10/09-19:14:34.760 4680 Table #4: 11 entries OK
-2023/10/09-19:14:34.761 4680 Archiving D:\Workspaces\digitaltwin-firmware\simplicity\.browser\Default\Site Characteristics Database/MANIFEST-000001: OK
-2023/10/09-19:14:34.974 4680 **** Repaired leveldb D:\Workspaces\digitaltwin-firmware\simplicity\.browser\Default\Site Characteristics Database; recovered 1 files; 327 bytes. Some data may have been lost. ****
+2023/10/09-19:14:34.986 4680 Reusing MANIFEST D:\Workspaces\digitaltwin-firmware\simplicity\.browser\Default\Site Characteristics Database/MANIFEST-000001
