@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <string.h>
 #include "app_log.h"
+#include "em_timer.h"
 
 #ifndef MEASUREMENT_H
 #define MEASUREMENT_H

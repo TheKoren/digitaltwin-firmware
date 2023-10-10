@@ -29,12 +29,19 @@ void measurement_init(void)
       on_timeout, NULL,
       0,
       SL_SLEEPTIMER_NO_HIGH_PRECISION_HF_CLOCKS_REQUIRED_FLAG);
+
 }
+uint32_t start_time, end_time, execution_time;
 
 
 void measurement_process_action(void)
 {
   if (toggle_timeout == true) {
+	  TIMER_Init_TypeDef timerInit = TIMER_INIT_DEFAULT;
+	    TIMER_Init(TIMER0, &timerInit);
+	    TIMER_Enable(TIMER0, true);
+	    start_time = TIMER_CounterGet(TIMER0);
+
       uint32_t humidity;
       int32_t temperature;
       float lux;
@@ -43,23 +50,24 @@ void measurement_process_action(void)
       uint16_t eco2;
       uint16_t tvoc;
       float sound_level;
-      char values[10][50];
+      char values[9][50];
       sl_service_rht_get(&humidity, &temperature);
       sl_service_light_get(&lux, &uvi);
       sl_service_pressure_get(&pressure);
       sl_service_gas_get(&eco2, &tvoc);
       sl_service_sound_get(&sound_level);
 
-      sprintf(values[0], "[");
-      sprintf(values[1], "%lu,", humidity);
-      sprintf(values[2], "%ld,", temperature);
-      sprintf(values[3], "%lu,", (uint32_t)(lux * 100));
-      sprintf(values[4], "%d,", (uint8_t)uvi);
-      sprintf(values[5], "%lu,", (uint32_t)(pressure * 1000.0f));
-      sprintf(values[6], "%d,", eco2);
-      sprintf(values[7], "%d,", tvoc);
-      sprintf(values[8], "%d", (int16_t)(sound_level * 100.0f));
-      sprintf(values[9], "]\r\n");
+      sprintf(values[0], "[%lu,", humidity);
+      sprintf(values[1], "%ld,", temperature);
+      sprintf(values[2], "%lu,", (uint32_t)(lux * 100));
+      sprintf(values[3], "%d,", (uint8_t)uvi);
+      sprintf(values[4], "%lu,", (uint32_t)(pressure * 1000.0f));
+      sprintf(values[5], "%d,", eco2);
+      sprintf(values[6], "%d,", tvoc);
+      sprintf(values[7], "%d,", (int16_t)(sound_level * 100.0f));
+      end_time = TIMER_CounterGet(TIMER0);
+      execution_time = end_time - start_time;
+      sprintf(values[8], "%lu,", execution_time);
 
       for(int i = 1; i <= 9; i++)
         {
