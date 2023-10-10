@@ -13,3 +13,7 @@ simplicity/bt_soc_thunderboard_brd4166a/bt_soc_thunderboard_brd4166a.slps lingui
 simplicity/bt_soc_thunderboard_brd4166a/app.c.orig linguist-vendored=true
 simplicity/bt_soc_thunderboard_brd4166a/imported_project_report.html linguist-vendored=true
 simplicity/bt_soc_thunderboard_brd4166a/main.c linguist-vendored=true
+*.mk linguist-vendored=true
+*.s37 linguist-vendored=true
+*.bin linguist-vendored=true
+*.axf linguist-vendored=true
