@@ -12,6 +12,20 @@ const char* wifi_network_password = "hotqm1asd";
 const char* soft_ap_ssid = "ESP32";
 const char* soft_ap_password = "123456789";
 
+typedef struct Control {
+    int TVOC;
+    long int ECO2;
+    double UV;
+    double LIGHT;
+    double TEMP;
+    double HUM;
+    int PRESSURE;
+    double SOUND;
+    int EXEC;
+}Control;
+
+Control control;
+
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_AP_STA);
@@ -34,27 +48,13 @@ void setup() {
   }
 
   Serial2.begin(115200);
+  delay(100);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   while (WiFi.status() == WL_CONNECTED) {
     pollNodes("http", "tcp");
-    delay(5000);
-    bool ending = false;
-    if (Serial2.available()) {
-      if ((char)Serial2.read() == '[') {
-        while (ending == false) {
-          char element = (char)Serial2.read();
-          if (element == ']') {
-            ending = true;
-          } else {
-            Serial.print(element);
-          }
-        }
-        Serial.println();
-      }
-    }
   }
   reconnect();
 }
@@ -63,21 +63,20 @@ void pollNodes(const char* service, const char* proto) {
   Serial.printf("Browsing for service _%s._%s.local. ... ", service, proto);
   int n = MDNS.queryService(service, proto);
   if (n == 0) {
-    //Serial.println("no services found");
+    Serial.println("no services found");
   } else {
     Serial.print(n);
-    //Serial.println(" service(s) found");
+    Serial.println(" service(s) found");
     for (int i = 0; i < n; ++i) {
-      // Print details for each service found
-      //Serial.print("  ");
-      //Serial.print(i + 1);
-      //Serial.print(": ");
-      //Serial.print(MDNS.hostname(i));
-      //Serial.print(" (");
-      //Serial.print(MDNS.IP(i));
-      // Serial.print(":");
-      //Serial.print(MDNS.port(i));
-      //Serial.println(")");
+      Serial.print("  ");
+      Serial.print(i + 1);
+      Serial.print(": ");
+      Serial.print(MDNS.hostname(i));
+      Serial.print(" (");
+      Serial.print(MDNS.IP(i));
+      Serial.print(":");
+      Serial.print(MDNS.port(i));
+      Serial.println(")");
     }
     String ip = String(MDNS.IP(0)[0]) + String(".") + String(MDNS.IP(0)[1]) + String(".") + String(MDNS.IP(0)[2]) + String(".") + String(MDNS.IP(0)[3]) + String(":") + String(MDNS.port(0));
     String data = requestData(ip);
@@ -115,15 +114,15 @@ String requestData(String ip) {
   int httpResponseCode = http.GET();
 
   if (httpResponseCode > 0) {
-    //Serial.print("HTTP Response code: ");
-    //Serial.println(httpResponseCode);
+    Serial.print("HTTP Response code: ");
+    Serial.println(httpResponseCode);
     String response = http.getString();
     http.end();
-    //Serial.println(response);
+    Serial.println(response);
     return response;
   } else {
-    //Serial.print("Error on HTTP request: ");
-    //Serial.println(httpResponseCode);
+    Serial.print("Error on HTTP request: ");
+    Serial.println(httpResponseCode);
     http.end();
     return "";
   }
@@ -143,10 +142,15 @@ String readFromAP() {
   updateMeasurementValues();
   unsigned long endTime = millis();
   JsonObject measurements = doc.createNestedObject("measurements");
-  measurements["temp"] = random(0, 40);
-  measurements["hum"] = random(30, 70);
-  measurements["press"] = random(38, 42);
-  measurements["gas"] = random(100, 500);
+  measurements["temp"] = control.TEMP;
+  measurements["hum"] = control.HUM;
+  measurements["press"] = control.PRESSURE;
+  measurements["eco2"] = control.ECO2;
+  measurements["tvoc"] = control.TVOC;
+  measurements["light"] = control.LIGHT;
+  measurements["uv"] = control.UV;
+  measurements["sound"] = control.SOUND;
+
 
   // Operational
   JsonObject operational = doc.createNestedObject("operational");
@@ -156,6 +160,8 @@ String readFromAP() {
   operational["TxPower"] = WiFi.getTxPower();
   operational["mode"] = "WIFI_AP_STA";
   operational["sensorRead"] = endTime - startTime;
+  operational["sensorExec"] = control.EXEC;
+
 
   /*
   Not used: 
@@ -173,7 +179,7 @@ String readFromAP() {
   }
 
   serializeJson(doc, output);
-  //Serial.println(output);
+  Serial.println(output);
   return output;
 }
 
@@ -187,13 +193,13 @@ void sendData(String data) {
   int httpResponseCode = http.POST(data);
 
   if (httpResponseCode > 0) {
-    //Serial.print("HTTP Response code: ");
-    //Serial.println(httpResponseCode);
+    Serial.print("HTTP Response code: ");
+    Serial.println(httpResponseCode);
     String response = http.getString();
-    //Serial.println(response);
+    Serial.println(response);
   } else {
-    //Serial.print("Error on HTTP request: ");
-    //Serial.println(httpResponseCode);
+    Serial.print("Error on HTTP request: ");
+    Serial.println(httpResponseCode);
   }
   http.end();
 }
@@ -211,5 +217,49 @@ void reconnect() {
 
 void updateMeasurementValues() {
   Serial.println("Reading sensorvalues");
-  delay(10);
+  Serial2.flush();
+  while (true) {
+    while (!(Serial2.available() > 0)) {
+      delay(30);
+      Serial.print(".");
+    }
+    char firstChar = Serial2.read();
+    if (firstChar == '[') {
+      break; // Exit the loop when '[' is received
+    }
+  }
+  bool ending = false;
+  char element;
+  char buffer[10];
+  while (ending == false) {
+    for (int i = 0; i<9; i++) {
+      int numBytes = Serial2.readBytesUntil(',', buffer, 10);
+      buffer[numBytes] = '\0';
+      switch(i) {
+        case 0:
+            control.HUM = atoi(buffer); break;
+        case 1:
+            control.TEMP = atoi(buffer); break;
+        case 2:
+            control.LIGHT = atoi(buffer); break;
+        case 3:
+            control.UV = atoi(buffer); break;
+        case 4:
+            control.PRESSURE = atoi(buffer); break;
+        case 5:
+            control.ECO2 = atoi(buffer); break;
+        case 6:
+            control.TVOC = atoi(buffer); break;
+        case 7:
+            control.SOUND = atoi(buffer); break;
+        case 8:
+            control.EXEC = atoi(buffer); break;
+        default: break;
+      }
+    }
+    ending = true;
+  }
+  Serial.println("Sensor read complete.");
 }
+
+
