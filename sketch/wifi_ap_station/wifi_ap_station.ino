@@ -10,7 +10,7 @@ const char* wifi_network_ssid = "Koren";
 const char* wifi_network_password = "hotqm1asd";
 
 const char* soft_ap_ssid = "ESP32";
-const char* soft_ap_password = "123456789";
+const char* soft_ap_password = "asdasd1234";
 
 typedef struct Control {
     int TVOC;
