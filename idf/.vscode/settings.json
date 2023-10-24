@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "esp_event.h": "c",
+        "freertos.h": "c",
+        "string.h": "c",
+        "task.h": "c",
+        "esp_wifi.h": "c",
+        "err.h": "c",
+        "esp_log.h": "c",
+        "event_groups.h": "c",
+        "esp_http_client.h": "c",
+        "mdns.h": "c",
+        "mywifi.h": "c",
+        "sys.h": "c",
+        "myhttpclient.h": "c",
+        "cjson.h": "c",
+        "esp_netif_ip_addr.h": "c",
+        "uart.h": "c",
+        "myuart.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "cl.exe"
+}

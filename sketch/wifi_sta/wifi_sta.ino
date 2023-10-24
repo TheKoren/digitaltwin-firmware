@@ -89,13 +89,12 @@ String readFromStation() {
   measurements["light"] = control.LIGHT;
   measurements["uv"] = control.UV;
   measurements["sound"] = control.SOUND;
-  
    // Operational
   JsonObject operational = doc.createNestedObject("operational");
   operational["rssi"] = WiFi.RSSI();
   operational["channel"] = WiFi.channel();
   operational["TxPower"] = WiFi.getTxPower();
-  operational["mode"] = "WIFI_AP_STA";
+  operational["mode"] = "WIFI_STA";
   operational["sensorRead"] = endTime - startTime;
   operational["sensorExec"] = control.EXEC;
 
@@ -131,10 +130,10 @@ void updateMeasurementValues() {
   }
   bool ending = false;
   char element;
-  char buffer[10];
+  char buffer[11];
   while (ending == false) {
     for (int i = 0; i<9; i++) {
-      int numBytes = Serial2.readBytesUntil(',', buffer, 10);
+      int numBytes = Serial2.readBytesUntil(',', buffer, 11);
       buffer[numBytes] = '\0';
       switch(i) {
         case 0:
