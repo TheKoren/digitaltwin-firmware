@@ -46,7 +46,7 @@ esp_err_t get_handler(httpd_req_t *req)
     cJSON_AddNumberToObject(operational, "rssi", ap.rssi);
     cJSON_AddNumberToObject(operational, "channel", ap.primary);
     cJSON_AddNumberToObject(operational, "TxPower", pow);
-    cJSON_AddStringToObject(operational, "mode", "WIFI_AP_STA");
+    cJSON_AddStringToObject(operational, "mode", "WIFI_STA");
     cJSON_AddNumberToObject(operational, "sensorRead", 0);
     cJSON_AddNumberToObject(operational, "sensorExec", control.EXEC);
 
