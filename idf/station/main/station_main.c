@@ -25,7 +25,6 @@ void app_main(void)
     initUart();
 
     initialise_wifi();
-    wifi_sta(30000);
     initialise_mdns();
 
     server_initiation();
