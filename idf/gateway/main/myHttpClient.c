@@ -130,7 +130,7 @@ void readFromAP() {
     cJSON_AddStringToObject(header, "device", "ESP32");
     char macString[18];
     snprintf(macString, sizeof(macString), "%02X:%02X:%02X:%02X:%02X:%02X",  mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    cJSON_AddStringToObject(header, "mac", macString); // Replace with your device's MAC address
+    cJSON_AddStringToObject(header, "mac", macString);
 
     // Update measurement values
     updateMeasurementValues();
@@ -146,9 +146,9 @@ void readFromAP() {
     cJSON_AddItemToObject(operational, "addressList", addressList);
     cJSON_AddNumberToObject(operational, "rssi", ap.rssi);
     cJSON_AddNumberToObject(operational, "channel", ap.primary);
-    cJSON_AddNumberToObject(operational, "TxPower", 0); // Replace with the actual Tx power
+    cJSON_AddNumberToObject(operational, "TxPower", pow);
     cJSON_AddStringToObject(operational, "mode", "WIFI_AP_STA");
-    cJSON_AddNumberToObject(operational, "sensorRead", pow); // Replace with actual sensor read time
+    cJSON_AddNumberToObject(operational, "sensorRead", 0);
     cJSON_AddNumberToObject(operational, "sensorExec", control.EXEC);
 
     wifi_sta_list_t stationList;

@@ -17,7 +17,13 @@
         "cjson.h": "c",
         "esp_netif_ip_addr.h": "c",
         "uart.h": "c",
-        "myuart.h": "c"
+        "myuart.h": "c",
+        "chrono": "c",
+        "future": "c",
+        "system_error": "c",
+        "xlocale": "c",
+        "sensor.h": "c",
+        "myhttpserver.h": "c"
     },
     "C_Cpp.default.compilerPath": "cl.exe"
 }
