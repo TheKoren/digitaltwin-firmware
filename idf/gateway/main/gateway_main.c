@@ -1,11 +1,3 @@
-/*  WiFi softAP Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <string.h>
 #include "include/myWifi.h"
 #include "include/myHttpClient.h"
@@ -21,22 +13,11 @@
 
 #define CONFIG_STA_CONNECT_TIMEOUT 30 // 30 seconds
 
-//static const char *TAG = "MAIN";
-
-void print_lowlevel_wifi_data()
-{/*
-    ESP_LOGI(TAG, "MAC address: %02X:%02X:%02X:%02X:%02X:%02X, Mode: %d, RSSI: %d, Channel: %d, Beacon interval: %d, TX Power: %d. \n",
-     mac[0], mac[1], mac[2], mac[3], mac[4], mac[5],
-      wifi_mode, ap.rssi, ap.primary, conf.ap.beacon_interval, pow);
-	  */
-}
-
 void vLowWifiTask(void *pvParameter)
 {
     TickType_t xLastWakeTime = xTaskGetTickCount();
 
     while(1) {
-        print_lowlevel_wifi_data();
 		updateMeasurementValues();
 		find_mdns_service("_http", "_tcp");
 		readFromAP();

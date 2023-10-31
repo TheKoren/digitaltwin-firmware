@@ -2,23 +2,19 @@
 
 #define CONFIG_STA_WIFI_SSID      "ESP32"
 #define CONFIG_STA_WIFI_PASSWORD      "asdasd1234"
-#define EXAMPLE_ESP_WIFI_CHANNEL   CONFIG_ESP_WIFI_CHANNEL
-#define EXAMPLE_MAX_STA_CONN       CONFIG_ESP_MAX_STA_CONN
 
 EventGroupHandle_t wifi_event_group;
 const int CONNECTED_BIT = BIT0;
-
-static const char *TAG = "WIFI";
 
 void event_handler(void* arg, esp_event_base_t event_base,
 								int32_t event_id, void* event_data)
 {
 	if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-		ESP_LOGI(TAG, "WIFI_EVENT_STA_DISCONNECTED");
+		ESP_LOGI("wifi", "WIFI_EVENT_STA_DISCONNECTED");
 		esp_wifi_connect();
 		xEventGroupClearBits(wifi_event_group, CONNECTED_BIT);
 	} else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
-		ESP_LOGI(TAG, "IP_EVENT_STA_GOT_IP");
+		ESP_LOGI("wifi", "IP_EVENT_STA_GOT_IP");
 		xEventGroupSetBits(wifi_event_group, CONNECTED_BIT);
 	}
 }
@@ -61,12 +57,12 @@ bool wifi_sta(int timeout_ms)
 
 	int bits = xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT,
 								   pdFALSE, pdTRUE, timeout_ms / portTICK_PERIOD_MS);
-	ESP_LOGI(TAG, "bits=%x", bits);
+	ESP_LOGI("wifi", "bits=%x", bits);
 	if (bits) {
-		ESP_LOGI(TAG, "WIFI_MODE_STA connected. SSID:%s password:%s",
+		ESP_LOGI("wifi", "WIFI_MODE_STA connected. SSID:%s password:%s",
 			 CONFIG_STA_WIFI_SSID, CONFIG_STA_WIFI_PASSWORD);
 	} else {
-		ESP_LOGI(TAG, "WIFI_MODE_STA can't connected. SSID:%s password:%s",
+		ESP_LOGI("wifi", "WIFI_MODE_STA can't connected. SSID:%s password:%s",
 			 CONFIG_STA_WIFI_SSID, CONFIG_STA_WIFI_PASSWORD);
 	}
 	return (bits & CONNECTED_BIT) != 0;
