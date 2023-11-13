@@ -9,3 +9,7 @@ Periodically polls available services (=connected devices to local network), and
 #### wifi_sta
 
 Connects to ESP32-AP. Works as a low-budget webserver, listens to AP polls
+
+#### monitoring_node
+
+Implementation for ESP-8266. Executes a WiFiScan, and sends the results to the backend server.
