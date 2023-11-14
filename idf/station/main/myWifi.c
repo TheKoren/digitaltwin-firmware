@@ -21,7 +21,7 @@ void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
 
     case WIFI_EVENT_STA_DISCONNECTED:
         printf("WiFi lost connection ... \n");
-        if (sta_retry_num < 5) {
+        if (sta_retry_num < 10) {
             esp_wifi_connect();
             sta_retry_num++;
             ESP_LOGI("WIFI_STA", "Retry to connect to AP");

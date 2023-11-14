@@ -25,8 +25,8 @@ void loop() {
 }
 
 void createJson() {
-  DynamicJsonDocument doc(1800);
-  char output[1800];
+  DynamicJsonDocument doc(2000);
+  char output[2000];
 
   JsonObject header = doc.createNestedObject("header");
 
