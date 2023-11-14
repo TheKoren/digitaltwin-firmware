@@ -5,6 +5,7 @@
 
 EventGroupHandle_t wifi_event_group;
 const int CONNECTED_BIT = BIT0;
+int sta_retry_num = 0;
 
 void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
@@ -20,10 +21,18 @@ void wifi_event_handler(void *event_handler_arg, esp_event_base_t event_base, in
 
     case WIFI_EVENT_STA_DISCONNECTED:
         printf("WiFi lost connection ... \n");
+        if (sta_retry_num < 5) {
+            esp_wifi_connect();
+            sta_retry_num++;
+            ESP_LOGI("WIFI_STA", "Retry to connect to AP");
+        } else {
+            ESP_LOGI("WIFI_STA", "Could not connect to AP");
+        }
         break;
 
 	case IP_EVENT_STA_GOT_IP:
 		printf("WiFi got IP ... \n\n");
+        sta_retry_num=0;
 		break;
 
     default:
