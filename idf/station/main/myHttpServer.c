@@ -51,7 +51,7 @@ esp_err_t get_handler(httpd_req_t *req)
     cJSON_AddNumberToObject(operational, "sensorExec", control.EXEC);
 
     char *output = cJSON_PrintUnformatted(root);
-    httpd_resp_send(req, output, HTTPD_RESP_USE_STRLEN);
+    httpd_resp_sendstr(req, output);
     cJSON_Delete(root);
     free(output);
     return ESP_OK;
